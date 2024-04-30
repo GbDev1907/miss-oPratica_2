@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ordenando Valores</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .container {
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+      }
+      .button,
+      input[type="number"],
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      #valores {
+        list-style-type: none;
+        padding: 0;
+      }
+      #valores li {
+        margin: 5px 0;
+      }
+      button {
+        color: white;
+        background-color: rgb(112, 112, 250);
+      }
+      .btn {
+        font-size: 15px;
+        height: 35px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="card-title">Ordenando Valores</h1>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  id="valor"
+                  placeholder="valor"
+                  class="form-control"
+                />
+                </div>
+                <div>
+                <button onclick="add()" class="btn btn-primary mt-2">
+                  Adicionar
+                </button>
+                </div>
+                <hr>
+              </div>
+
+              <div class="mb-3">
+                <select id="algoritmos" class="form-control">
+                  <option value="bubble" selected>Bubble Sort</option>
+                  <option value="selection">Selection Sort</option>
+                  <option value="quick">Quick Sort</option>
+                </select>
+              </div>
+                <button onclick="ordenar()" class="btn btn-primary">Ordenar</button>
+                <button onclick="misturar()" class="btn btn-primary ml-2">Misturar</button>
+                
+
+                <ul id="valores" class="mt-3"></ul>
+            </i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var listaSeleção = document.getElementById("algoritmos");
+
+      function add() {
+        var valor = getValor();
+        if (valor) {
+          addToList(valor);
+
+          document.getElementById("valor").value = "";
+        }
+      }
+
+      function ordenar() {
+        var listaValores = document.getElementById("valores");
+        var vetorValores = [];
+        for (var i = 0; i < listaValores.children.length; i++) {
+          vetorValores.push(parseInt(listaValores.children[i].innerHTML));
+        }
+        var algoritmoSelecionado = document.getElementById("algoritmos").value;
+        switch (algoritmoSelecionado) {
+          case "bubble":
+            bubble_sort(vetorValores);
+            break;
+          case "selection":
+            selection_sort(vetorValores);
+            break;
+          case "quick":
+            quick_sort(vetorValores, 0, vetorValores.length - 1);
+            break;
+          default:
+            alert("Algoritmo de ordenação não reconhecido.");
+        }
+        atualizarLista(vetorValores);
+      }
+
+      function misturar() {
+        var listaValores = document.getElementById("valores");
+        var vetorValores = [];
+        for (var i = 0; i < listaValores.children.length; i++) {
+          vetorValores.push(parseInt(listaValores.children[i].innerHTML));
+        }
+        shuffle(vetorValores);
+        atualizarLista(vetorValores);
+      }
+
+      function bubble_sort(vetor) {
+        let n = vetor.length;
+        for (let i = 0; i < n - 1; i++) {
+          for (let j = 0; j < n - i - 1; j++) {
+            if (vetor[j] > vetor[j + 1]) {
+              let temp = vetor[j];
+              vetor[j] = vetor[j + 1];
+              vetor[j + 1] = temp;
+            }
+          }
+        }
+      }
+
+      function selection_sort(vetor) {
+        let n = vetor.length;
+        for (let i = 0; i < n; i++) {
+          let min = i;
+          for (let j = i + 1; j < n; j++) {
+            if (vetor[j] < vetor[min]) {
+              min = j;
+            }
+          }
+          if (min != i) {
+            let temp = vetor[i];
+            vetor[i] = vetor[min];
+            vetor[min] = temp;
+          }
+        }
+      }
+
+      function quick_sort(vetor, inicio = 0, fim = vetor.length - 1) {
+        if (inicio >= fim) {
+          return;
+        }
+
+        const indicePivo = particionar(vetor, inicio, fim);
+        quick_sort(vetor, inicio, indicePivo - 1);
+        quick_sort(vetor, indicePivo + 1, fim);
+      }
+
+      function particionar(vetor, inicio, fim) {
+        const pivo = vetor[fim];
+        let indicePivo = inicio;
+        for (let i = inicio; i < fim; i++) {
+          if (vetor[i] < pivo) {
+            [vetor[i], vetor[indicePivo]] = [vetor[indicePivo], vetor[i]];
+            indicePivo++;
+          }
+        }
+        [vetor[indicePivo], vetor[fim]] = [vetor[fim], vetor[indicePivo]];
+        return indicePivo;
+      }
+
+      function getValor() {
+        var valor = document.getElementById("valor").value;
+        return valor;
+      }
+
+      function getValores() {
+        var valores = document.getElementById("valores");
+        return valores;
+      }
+
+      function atualizarLista(vetor) {
+        var novosItens = vetor.map(function (valor) {
+          return "<li>" + valor + "</li>";
+        });
+
+        document.getElementById("valores").innerHTML = novosItens.join("");
+      }
+
+      function shuffle(vetor) {
+        var m = vetor.length,
+          t,
+          i;
+        while (m) {
+          i = Math.floor(Math.random() * m--);
+
+          t = vetor[m];
+          vetor[m] = vetor[i];
+          vetor[i] = t;
+        }
+        return vetor;
+      }
+
+      function addToList(valor) {
+        var node = document.createElement("LI");
+        var textNode = document.createTextNode(valor);
+        node.appendChild(textNode);
+
+        document.getElementById("valores").appendChild(node);
+      }
+
+      var vetor = [1, 2, 3, 4, 5];
+      vetor = shuffle(vetor);
+
+      var listaValores = document.getElementById("valores");
+      var vetorValores = [];
+      for (var i = 0; i < listaValores.children.length; i++) {
+        var valor = parseInt(listaValores.children[i].innerHTML);
+        vetor.push(valor);
+      }
+
+      var novosItens = vetor.map(function (valor) {
+        return "<li>" + valor + "</li>";
+      });
+
+      var html = novosItens.reduce(function (acumulador, item) {
+        return acumulador + item;
+      }, "");
+
+      listaValores.innerHTML = html;
+
+      var listaSeleção = document.getElementById("algoritmos");
+      switch (listaSeleção.selectedIndex) {
+        case 0: // Buble Sort
+          bubble_sort(vetor);
+          atualizarLista();
+          break;
+        case 1: // Selection Sort
+          selection_sort(vetor);
+          atualizarLista();
+          break;
+      }
+
+      console.log(listaValores);
+
+      console.log(listaSeleção);
+
+      console.log(vetor);
+
+      switch (listaSeleção.selectedIndex) {
+        case 0: // Buble Sort
+          bubble_sort(vetor);
+
+          break;
+        case 1: // Selection Sort
+          selection_sort(vetor);
+          break;
+      }
+
+      console.log(listaValores);
+      console.log(listaSeleção);
+      console.log(vetor);
+    </script>
+
+    <script src="ordenando.js"></script>
+  </body>
+</html>

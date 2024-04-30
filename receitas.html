@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo de Receitas</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      .card {
+        margin: 1rem;
+      }
+
+      #pnlCatalogo {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .img-fluid {
+        max-height: 200px;
+        width: auto;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body class="bg-warning" onload="preencheCatalogo()">
+    <div class="container-fluid">
+      <h1>Catálogo de Receitas</h1>
+      <div
+        id="pnlCatalogo"
+        class="d-flex justify-content-center flex-wrap"
+      ></div>
+    </div>
+    <script>
+      var receitas = [
+        {
+          titulo: "Arroz de Couve-Flor",
+          imagem:
+            "https://www.annmariemichaels.com/content/images/size/w1200/2023/05/brown-rice.png",
+          preparo:
+            "Deixe a couve-flor picada. Adicione os ingredientes e refogue bem. Adicione sal, tampe a panela e deixe cozinhar.",
+          ingredientes: ["Arroz", "Couve-Flor", "Cebola Média", "Azeite"],
+        },
+        {
+          titulo: "Bolo de café",
+          imagem:
+            "https://th.bing.com/th/id/OIP.IC0Cq3vSrezCQDbDE4VGzQHaE8?rs=1&pid=ImgDetMain",
+          preparo:
+            "Bata o açúcar, as gemas e o café. Adicione farinha e chocolate e mexa bem. Bata as claras e junte à mistura.",
+          ingredientes: [
+            "Farinha de Trigo",
+            "Açúcar",
+            "Chocolate em Pó",
+            "Ovos",
+          ],
+        },
+        {
+          titulo: "Coxinha de Brigadeiro",
+          imagem:
+            "https://1.bp.blogspot.com/-5o_YxYE3D0o/YFjs97yxuwI/AAAAAAAARcQ/6KIsRkTlmvofMKqPexHf80_6Fv4tv6QOACLcBGAsYHQ/s540/Coxinha%2Bde%2BBrigadeiro%2Bcom%2BMorangos.png",
+          preparo:
+            "Junte o leite condensado, chocolate em pó e manteiga. Aqueça no fogo baixo. Envolva os morangos e passe no granulado.",
+          ingredientes: [
+            "Leite Condensado",
+            "Chocolate em pó",
+            "Manteiga",
+            "Chocolate Granulado",
+          ],
+        },
+      ];
+
+      function getListaIngredientes(receita) {
+        var ListaIngredientes = receita.ingredientes
+          .map(function (ingrediente) {
+            return "<li>" + ingrediente + "</li>";
+          })
+          .reduce(function (acumulador, valorAtual) {
+            return acumulador + valorAtual;
+          }, "");
+
+        return "<ul>" + ListaIngredientes + "</ul>";
+      }
+
+      function getCard(receita) {
+        var card = `
+          <div class="card" style="width: 250px;">
+            <img src="${receita.imagem}" class="card-img-top img-fluid" alt="${
+          receita.titulo
+        }">
+            <div class="card-body">
+              <h5 class="card-title">${receita.titulo}</h5>
+              <ul>
+
+      ${getListaIngredientes(receita)}
+              </ul>
+              <hr>
+              <p class="card-text">${receita.preparo}</p>
+            </div>
+          </div>
+        `;
+        return card;
+      }
+
+      function preencheCatalogo() {
+        var pnlCatalogo = document.getElementById("pnlCatalogo");
+        pnlCatalogo.innerHTML = receitas
+          .map(getCard)
+          .reduce((acumulador, valorAtual) => acumulador + valorAtual, "");
+      }
+    </script>
+  </body>
+</html>
